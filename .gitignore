@@ -1,0 +1,5 @@
+data_cleaning/*.csv
+data_cleaning/geodata/
+find_200_values/*.csv
+find_200_values/*.py
+find_200_values/files/
