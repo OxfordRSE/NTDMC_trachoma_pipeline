@@ -1,4 +1,6 @@
-# Generating IUCodes from geoconnect IDs
+![Illustration of trachoma pipeline](./diagramm.png)
+
+# 1 - Generating IUCodes from geoconnect IDs
 
 Original data provided by ????, location are identified by geoconnect ID
 ```
@@ -40,7 +42,7 @@ The output of this step is the file `FinalData.csv`, with both the Geoconnect ID
 ...
 ```
 
-# Sample an ensemble of parameter sets using AMIS
+# 2 - Sample an ensemble of parameter sets using AMIS
 
 Model parameters are *????*
 We want to find the right transmission model parameters at each location.
@@ -52,7 +54,7 @@ then run 200 simulations and predict prevalence statistics at each
 location.
 
 
-## Group scenarios according to mean prevalence
+## 2.1 - Group scenarios according to mean prevalence
 
 Each location is associated a scenario, identified by an integer index.
 ```
@@ -77,7 +79,7 @@ The output of this steps is a new data file `find_200_values/FinalDataPrev.csv` 
 **Are we grouping scenarios or IUs?**
 **Does the group number depend on the IU or the scenario?**
 
-## Prepare python codes to run the transmission model within the AMIS algorithm
+## 2.2 - Prepare python codes to run the transmission model within the AMIS algorithm
 
 The trachoma transmission model is implemented in Python (`find_200_values/trachoma`).
 
@@ -121,7 +123,7 @@ each scenario.  This file is one of the two input file required by the trachoma 
 code, along with `InputBet_scenX_groupY.csv` which lists the values for the different sets
 of parameters.
 
-## Run the AMIS algorithm in parallel for each scenario
+## 2.3 - Run the AMIS algorithm in parallel for each scenario
 
 The R script `Trachoma_AMIS_perprev` is in parallel for each scenario. The scenario index
 is mapped to the task ID given by the job scheduler.
@@ -193,4 +195,4 @@ for(i in 1:n.pixels) {
 }
 ```
 
-# Running the transmission model for the 200 parameter sets
+# 3 - Running the transmission model for the 200 parameter sets
