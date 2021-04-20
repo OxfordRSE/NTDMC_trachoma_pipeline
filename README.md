@@ -44,10 +44,14 @@ The output of this step is the file `FinalData.csv`, with both the Geoconnect ID
 
 # 2 - Sample an ensemble of parameter sets using AMIS
 
-Model parameters are *????*
-We want to find the right transmission model parameters at each location.
-Based on geostatistical data (obseverd distribution of parameters at different locations), we use the AMIS algorithm to
-sample a set of 200 parameters from a distribution that best matches the observed distribution of parameters.
+**What are the model parameters?**
+
+We want to find the right transmission model parameters at each
+location (Implementation Unit).  We start from geostatistical data
+that represents the observed distribution of parameters at IUs. We use
+the AMIS algorithm to sample a set of 200 parameters from a
+distribution that best matches the observed distribution of
+parameters.
 
 With these parameters and the associated statistical weight, we can
 then run 200 simulations and predict prevalence statistics at each
@@ -56,15 +60,25 @@ location.
 
 ## 2.1 - Group scenarios according to mean prevalence
 
-Each location is associated a scenario, identified by an integer index.
+Each IU is associated with one Mass Drug Administration (MDA) event, that may span several years.
+Each MDA, does not occur at the same dates for all IUs, and each location is therefore associated with
+a scenario which represents the MDA start date and end date for this specific location.
+
+For instance, the locality of Baso Naworana in Ethiopia is associated to scenario 36, meaning that
+the MDA started in year 2008 and ended in year 2017.
 ```
 # data_cleaning/FinalData.csv
 "Country","Region","District","Subdistrict",...,"IUCodes","start_MDA","last_MDA","Scenario"
 "Ethiopia","Amhara","N. Shoa","Baso Naworana",...,"ETH18551",2008,2017,36
 ```
-**What is a scenario? start date of MDA and end date of MDA?**
 
-We assign each location (IU) in the data (`FinalData.csv`), to a given group, based on the mean prevalence.
+Implementation units are grouped according the observed mean prevalence **in year 2019 (??)**.
+This value depends on the local transmission parameters but also the local MDA scenario.
+
+*TODO describe computaion of mean prevalence here*
+
+In the current implementation, a prevalence group spans a range of 10% prevalence, meaning that IUs with a observed 2019 mean prevalence between 0% and 10% fall in group 1, IUs between 10% and 20% fall in group 2, and so on. Specially, all IUs leading to a mean prevalence above 60% are combined into a single group and will not be considered
+in the AMIS algorithm later on.
 
 The output of this steps is a new data file `find_200_values/FinalDataPrev.csv` with an additional column indicating the prevalence group:
 
@@ -76,18 +90,43 @@ The output of this steps is a new data file `find_200_values/FinalDataPrev.csv` 
 "Ethiopia","Amhara","West Gojam","Gongi Kolela",...,"ETH18604",2008,2019,28,3
 ```
 
-**Are we grouping scenarios or IUs?**
-**Does the group number depend on the IU or the scenario?**
-
 ## 2.2 - Prepare python codes to run the transmission model within the AMIS algorithm
 
-The trachoma transmission model is implemented in Python (`find_200_values/trachoma`).
+The AMIS algorithm is run for each different value of the pair `(scenario,group)`.
 
-At each iteration of the AMIS algorithm, we must run the model for $N_t=100$ sets of parameters for every IU, according to the scenario of the IU.
+For each row of a dataframe `ScenarioGroupPair` defined as
 
-The AMIS algorithm is run in parallel for each scenario, to sample parameter sets for the IU associated with this scenario.
+```R
+> Data = read.csv("FinalDataPrev.csv")
+> ScenarioGroupPair = unique(data.frame(Data$Scenario, Data$Group))
+> ScenarioGroupPair[1:5,]
+  Data.Scenario Data.Group
+1            36          2
+2            28          3
+3            45          3
+4            28          2
+5            46          2
+```
 
-The trachoma transimission model is run from a function `test` defined in a file `main_trachoma_run_scenX_groupY.py` with `X` the scenario index and `Y` the group index.
+a distribution of parameters is estimated for each IU that correspond
+to the scenario and group. Following the abocve example, a first AMIS
+run would estimate the distribution of parameters for all IUs in group
+2 with scenario 26. Another AMIS run would estimate the parameters for
+all IUs in group 3 with scenario 28.
+
+Following the AMIS algorithm, the distribution of parameters at a IU is estimated
+iteratively, starting from an initial proposal distribution. At each new iteration,
+$N=100$ parameter sets are sampled from the previously estimated distribution. They are then used as an input for N simulations of the transmission model which computes the
+corresponding 2019 prevalence value. From this sample of $N$ prevalence values, a new proposal distribution is estimated for transmission parameters. The procedure is iterated until a suitable estimate is computed. *TODO - Add ref to ESS criterion*
+
+The trachoma transmission model is implemented in Python (`find_200_values/trachoma`) and is run from the AMIS R script using the `reticulate` package.
+
+The Python trachoma model package makes available a function `Trachoma_simulation`
+that simulates the transmission model for a given set of parameters and a given scenartio and outputs prevalence and infection data over the course of the simulation.
+This function is not called direcrly from the AMIS R script but instead by running a python script `main_trachoma_scenX_groupY.py` which calls a `test()` function wrapping the
+`Trachoma_Simulation` function call. Function `test` is defined is a Python file
+`main_trachoma_run_scenX_groupY.py` which is sourced (using `reticulate`'s `source_python`)
+ahead of the simulations:
 
 ```python
 # find_200_values/main_trachoma_run_scen36_group2.py
@@ -104,12 +143,13 @@ def test():
 	 	 	 	 InSimFilePath=None)
 ```
 
-The AMIS script (R) calls another file `main_trachoma_scenX_groupY.py` that calls `test()`.
-
-Before the AMIS is run, python files are prepared for each scenario. this is done using script `CreateFilesPrev.R`
+Files `main_trachoma_scenX_groupY.py` and `main_trachoma_run_scenX_groupY.py` are written
+before hand, for each `(scenario,group)` pair. This is done by R script `CreateFilesPrev.R`:
 
 ```R
 # find_200_values/CreateFilesPrev.R
+
+# ....
   
 filename = paste("main_trachoma_scen", Scen[i], "_group", Group[i], ".py", sep="")
 cat(file=filename, paste("test()"), append = F)
@@ -118,10 +158,11 @@ filename = paste("main_trachoma_run_scen", Scen[i], "_group", Group[i], ".py", s
 FilePrev(filename, i)
 ```
 
-In addition, the scenario parameters are written in a file `files/InputMDA_scenX.csv` for
-each scenario.  This file is one of the two input file required by the trachoma model
-code, along with `InputBet_scenX_groupY.csv` which lists the values for the different sets
-of parameters.
+In addition, the scenario parameters are written in a file
+`files/InputMDA_scenX.csv` for each scenario.  This file is one of the
+two input files required by `Trachoma_simulation`, along with
+`InputBet_scenX_groupY.csv` which lists the values for the different
+sets of parameters (computed at each iteration of the AMIS algorithm).
 
 ## 2.3 - Run the AMIS algorithm in parallel for each scenario
 
