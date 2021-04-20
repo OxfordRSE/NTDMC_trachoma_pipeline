@@ -166,16 +166,26 @@ sets of parameters (computed at each iteration of the AMIS algorithm).
 
 ## 2.3 - Run the AMIS algorithm in parallel for each scenario
 
-The R script `Trachoma_AMIS_perprev` is in parallel for each scenario. The scenario index
-is mapped to the task ID given by the job scheduler.
+### Job submission
 
-```R
-iscen = as.numeric(Sys.getenv('SLURM_ARRAY_TASK_ID'))
+Not sure which script?
+
+```shell
+#!/bin/bash 
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --time=48:00:00
+#SBATCH --partition=ntd
+#SBATCH -a 1-264
+#SBATCH --mem-per-cpu=3882
+
+module load gnu7/7.3.0
+module load R
+
+time R --vanilla < Trachoma_AMIS_perprev.r > Quick_basic
 ```
 
-**Which script is used to submit the jobs?**
-
-The AMIS is an iterative procedure to sample parameters according to a distribution that best matches the available data.
+Size of Slurm array is number of `(scenario,group)` combinations?
 
 ### First iteration
 
@@ -222,7 +232,7 @@ as `sparamWW.csv.`
 
 ### Sampling 200 parameter sets
 
-Given the ensemble of parameter sets and their respective weight, $n=200$ parameters are sampled for the current scenario.
+For each IU, the AMIS algorithm yields a set of `N*T` weighted parameter sets.  For each IU, `n=200` parameter sets are sampled from the weighted ensemble.
 These parameter values are written in `files200/InputBet_X.csv` where `X` is the scenario index.
 
 ```R
@@ -237,3 +247,9 @@ for(i in 1:n.pixels) {
 ```
 
 # 3 - Running the transmission model for the 200 parameter sets
+
+We are interested in predicting prevalence values from 2020 onwards.
+For each IU, we run the transmission model over the ensemble of `n` parameter sets sampled from the AMIS algorithm until 2020.
+
+**What do we need to (re)start from 2020**?
+**Is the point to avoid the burn-in period?**
