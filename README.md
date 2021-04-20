@@ -48,7 +48,7 @@ The output of this step is the file `FinalData.csv`, with both the Geoconnect ID
 
 We want to find the right transmission model parameters at each
 location (Implementation Unit).  We start from geostatistical data
-that represents the observed distribution of parameters at IUs. We use
+that represents the observed distribution of prevalences at IUs. We use
 the AMIS algorithm to sample a set of 200 parameters from a
 distribution that best matches the observed distribution of
 parameters.
