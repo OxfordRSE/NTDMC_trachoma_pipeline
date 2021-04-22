@@ -54,7 +54,7 @@ Sys.which("python")
 
 source("AMIS_source.R")  # source code for AMIS
 #source_python('sth_simulation/helsim_RUN.py') # source code of transmission model in python
-source_python(python_file)
+transmission_model <- import("trachoma")
 
 # function to draw from prior
 dprop0<-function(a,b){
@@ -130,7 +130,15 @@ print(Sys.time())
 # output R0, k file with seed to be input for python
 #STH_Simulation(paramFileName='AscarisParameters_moderate.txt', demogName='WHOGeneric', MDAFilePath='files/Input_MDA_23Oct20.csv', PrevFilePath='files/OutputPrev_STH_test.csv', RkFilePath='files/InputRk_STH.csv', nYears=18, outputFrequency=1, numReps=as.integer(3), SaveOutput=FALSE)  # only works for 3 at a time on my laptop- problems with multiprocessing
 
-source_python(run_py_file)
+inputMDA <- sprintf("files/InputMDA_scen%g.csv", Scen[iscen], Group[iscen])
+infect_output <- sprintf("output/InfectFilePath_scen%g_group%g.csv", Scen[iscen], Group[iscen])
+transmission_model$Trachoma_Simulation(inputbeta,
+                                       inputMDA,
+                                       prevalence_output,
+                                       infect_output,
+                                       SaveOutput=FALSE,
+                                       OutSimFilePath=NULL,
+                                       InSimFilePath=NULL)
 ###
 print(Sys.time())
 
