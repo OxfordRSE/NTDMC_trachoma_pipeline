@@ -248,8 +248,47 @@ for(i in 1:n.pixels) {
 
 # 3 - Running the transmission model for the 200 parameter sets
 
-We are interested in predicting prevalence values from 2020 onwards.
-For each IU, we run the transmission model over the ensemble of `n` parameter sets sampled from the AMIS algorithm until 2020.
+To be able to restart from the beginning of 2020, we must store the state of the system (e.g. infected part of the population) at this date.
+With the model parameter for all IUs sampled using the AMIS algorithm, we (re)simulate the dynamics for all IUs, starting from a common date
+before the start of the first MDA event (is this date **1998?**).
 
-**What do we need to (re)start from 2020**?
-**Is the point to avoid the burn-in period?**
+```python
+# run_200/trachoma_run_200.py
+import sys
+
+# ...
+
+from trachoma.trachoma_simulations import Trachoma_Simulation
+
+Trachoma_Simulation(BetFilePath=BetFilePath,
+                    MDAFilePath=MDAFilePath,
+                    PrevFilePath=PrevFilePath,
+                    InfectFilePath=InfectFilePath,
+                    SaveOutput=True,
+                    OutSimFilePath=OutSimFilePath,
+                    InSimFilePath=None)
+```
+
+Currently, there are two approaches to perform this step.
+
+1. Run the resimulation directly following the AMIS algorithm after sampling the model parameter.
+2. Write the sampled parameters in a file for all IUs (one file per IU) following the AMIS and launch
+   the resimulation in separate jobs for all IUs.
+   
+   ```R
+   IUCodes = DataScenarios$Data.IUCodes
+
+	for (i in 1:length(IUCodes))
+	{
+		filename = paste("IU", IUCodes[i], sep="_")
+		cat(file=filename, "#!/bin/bash",  "\n", append = F)
+		cat(file=filename, "#SBATCH --nodes=1" ,  "\n", append = T)
+		cat(file=filename, "#SBATCH --ntasks-per-node=4" ,  "\n", append = T)
+		cat(file=filename, "#SBATCH --time=11:59:00" ,  "\n", append = T)
+		# ...
+		name = paste("sbatch ", paste("IU", IUCodes[i], sep="_"))
+		cat(file="Send.txt", name,  "\n", append = T)
+	}
+   ```
+   
+   
