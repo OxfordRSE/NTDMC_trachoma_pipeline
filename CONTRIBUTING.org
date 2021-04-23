@@ -1,0 +1,129 @@
+#+TODO: TODO | DONE
+
+* Contributing to this repository
+
+A minimal workflow to get you started with git and github.
+
+This document describes how to contribute to this repository. It is
+aimed at contributors with no previous experience git Git. This
+document will be updated regularly as the core contributors get more
+and more familiar with using git and GitHub. 
+
+If you're familiar with branches, forks and pull requests, please
+consider contributing using a Pull Request instead of pushing directly
+to ~main~. Pull Requests can be from a branch (if you have push rights
+to this repo) or your own fork of this repo. If you're not familiar
+with any of this, please read on.
+
+** Working on the files locally (i.e. on you computer)
+
+ 1. First of all download the files using ~git clone~. You only have to this once.
+    #+begin_src shell
+      git clone https://github.com/OxfordRSE/NTDMC_trachoma_pipeline.git
+    #+end_src
+ 2. Make the changes you want, for instance edit ~README.md~.
+ 3. [optional] List the modified files.
+    #+begin_src shell
+      git status
+    #+end_src
+ 4. [optional] View the changes compared to the last recorded snapshot (the last "commit").
+    #+begin_src shell
+      git diff
+    #+end_src
+ 5. Register your changes to include them in the next commit.
+    #+begin_src shell
+      git add README.md # Or any other file you modified
+    #+end_src
+    If you modified several files, you can call ~git add~ multiple times, or pass them all to ~git add~. e.g.
+    #+begin_src shell
+      git add file1 file2 file3 ...
+    #+end_src
+ 6. Commit (record) your changes in the history of the project.
+    #+begin_src shell
+      git commit -m "A short description of the changes"
+    #+end_src
+ 7. Back to step (2)
+
+ It's best practices to commit changes that are related to each other
+ together. For example, say you're working on a data analysis script
+ that manipulate some data then produces a plot. Say you modified part
+ of the analysis code, but also made some cosmetic changes to the way
+ the plot is presented. Ideally, you would make the first changes,
+ add/commit, then make the other changes then add/commit. It makes it
+ easier to understand the history of a project if individual commits
+ are specific to a particular change, as opposed to a mix of changes
+ that have little to do with one another. Try to keep this in mind, but
+ don't worry too much about it for now. We'll have opportunities to
+ revisit this as you're getting more familiar with git.
+
+** Sharing your changes
+
+ #+ATTR_HTML: :width 40%
+ [[https://github.com/MalikaIhle/Collaborative-RStudio-GitHub/blob/master/assets/new-overview.png]]
+
+ The above drawing illustrates the current situation. We have a GitHub
+ repository (the blue REMOTE) and a local (understand "on your computer")
+ copy of the files (LOCAL). Let's ignore the pink stuff on the left for
+ now.
+
+ You've done some work on your local version, perhaps added a few
+ commits. Now you'd like to update the GitHub repository, so that your
+ changes are available to others.
+
+ To do so, "push" your changes:
+    #+begin_src shell
+      git push
+    #+end_src
+  
+That's it!
+Well..
+Most of the time.
+
+If somebody else updated the GitHub repository while you were
+working locally, git will refuse to push your changes before you
+first update your local version.  It's a safety measure that
+prevent several people to modify the same lines at the same time.
+
+To update your local files, you can use 
+#+begin_src shell
+  git pull
+#+end_src
+
+Git downloads the new commits that you don't yet have in your local
+version of the project and merges them with yours. This operation
+produces a new commit, called a "merge commit". At this point Git
+will open a text editor for you to write a description for the
+merge commit. It comes with a message by default, something like
+"merge branch X into branch Y" which you can leave as it is. Simply save 
+and close the editor.
+
+One caveat. If the new commits that you "pull" from GitHub modify
+lines that your new, local commits also modify, git will report a
+"merge conflict". Nothing bad here, it's just that git cannot know
+which is the "good" version... yours? theirs? a combination of both?
+If this happens, see below for [[* Handling merge conflicts]]. 
+
+
+With your local copy up to date, you can now push your changes to GitHub:
+#+begin_src shell
+  git push
+#+end_src
+
+   
+Anyways, it's good practice to update your local copy of the files
+before you start working on any of them. For this, use ~git pull~.
+
+** TODO Handling merge conflicts
+
+
+** Summary of useful git commands
+
+| action                                          | command                             |
+|-------------------------------------------------+-------------------------------------|
+| Register all changes in a file                  | ~git status~                        |
+| Commit the registered changes (take a snapshot) | ~git diff~                          |
+| View the commit history                         | ~git log~                           |
+| List all modified files                         | ~git add <file>~                    |
+| View current changes compared to last commit    | ~git commit -m 'Short description'~ |
+| Update your local copy of the repo              | ~git pull~                          |
+| Push your changes to the GitHub repo            | ~git push~                          |
