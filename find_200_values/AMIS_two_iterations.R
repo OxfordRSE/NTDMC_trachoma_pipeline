@@ -155,6 +155,9 @@ for(i in 1:n.pixels){
 cat( min(ess),  "", max(ess), "\n")
 
 ESS<-matrix(ess, nrow=1, ncol=n.pixels)
+write.table(ESS, file="test_data/ESS_iteration_1.csv", row.names = F, col.names = F)
+write.table(param[1:N[1],], file="test_data/param_iteration_1.csv", row.names = F, col.names = F)
+
 
 ###################################################################
 #          Iteration 2+
