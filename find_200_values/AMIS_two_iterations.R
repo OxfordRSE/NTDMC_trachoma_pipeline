@@ -14,6 +14,8 @@
 iscen = 1
 rm(list=setdiff(ls(), "iscen"))
 
+library(tmvtnorm)
+library(mnormt)
 library(mclust)
 library(reticulate)
 
@@ -221,14 +223,16 @@ input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
-source_python(run_py_file) # model outputs to file
-print(Sys.time())
+transmission_model$Trachoma_Simulation(inputbeta,
+                                       inputMDA,
+                                       prevalence_output,
+                                       infect_output,
+                                       SaveOutput=FALSE,
+                                       OutSimFilePath=NULL,
+                                       InSimFilePath=NULL)
+
 res <- read.csv(prevalence_output) # read python output file
 ans <- 100*res[,dim(res)[2]]
-
-
-print(i)
-print(Sys.time())
 
 param[(sum(N[1:(t-1)])+1):sum(N[1:(t)]),1]<-x
 param[(sum(N[1:(t-1)])+1):sum(N[1:(t)]),2]<-y
@@ -257,3 +261,6 @@ ESS<-rbind(ESS, as.numeric(ess))
 
 w1<-c(colSums(WW))
 param[1:sum(N[1:(t)]),4]<-w1
+
+write.table(ESS, file="test_data/ESS_iteration_2.csv", row.names = F, col.names = F)
+write.table(param[1:sum(N[1:(t)]),], file="test_data/param_iteration_2.csv", row.names = F, col.names = F)
