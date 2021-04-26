@@ -47,7 +47,7 @@ prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", Scen[iscen]
 inputbeta <- sprintf("files/InputBet_scen%g_group%g.csv", Scen[iscen], Group[iscen])
 
 Sys.which("python")
-use_virtualenv("/home/thibault/.pyenv/versions/trachoma", required=TRUE)
+use_virtualenv(".venv", required=TRUE)
 #use_python("/usr/bin/python", required = TRUE)  # need this for cluster
 print("check0")
 Sys.which("python")
