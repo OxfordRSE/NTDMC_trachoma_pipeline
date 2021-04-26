@@ -160,7 +160,6 @@ ESS<-matrix(ess, nrow=1, ncol=n.pixels)
 #          Iteration 2+
 ####################################################################
 
-set.seed(Sys.time())
 stop<-0
   
 t<-t+1
