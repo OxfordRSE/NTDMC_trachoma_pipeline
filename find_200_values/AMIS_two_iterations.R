@@ -11,32 +11,46 @@
 ### Requires: Maps file, python code with parameter file, AMIS source
 ###############################################
 
+get_scenario_id <- function(data, iscen) {
+    Data = read.csv(data)
+    scenar_group_pairs = unique(data.frame(Data$Scenario, Data$Group))
+
+    ### TODO: Remove high prevalence group because...
+    high_prevalence_group <- which(scenar_group_pairs$Data.Group == 7)
+    scenar_group_pairs = scenar_group_pairs[-high_prevalence_group, ]
+
+    return(scenar_group_pairs$Data.Scenario[iscen])
+}
+
+get_group_id <- function(data, iscen) {
+    Data = read.csv(data)
+    scenar_group_pairs = unique(data.frame(Data$Scenario, Data$Group))
+
+    ### TODO: Remove high prevalence group because...
+    high_prevalence_group <- which(scenar_group_pairs$Data.Group == 7)
+    scenar_group_pairs = scenar_group_pairs[-high_prevalence_group, ]
+
+    return(scenar_group_pairs$Data.Group[iscen])
+}
+
 iscen = 1
-rm(list=setdiff(ls(), "iscen"))
 
 library(tmvtnorm)
 library(mnormt)
 library(mclust)
 library(reticulate)
 
-Data = read.csv("./data/FinalDataPrev.csv")
-DataScenarios = data.frame(Data$start_MDA, Data$last_MDA, Data$Scenario, Data$Group)
-DataScenarios = unique(DataScenarios)
-DataScenarios = DataScenarios[-which(DataScenarios$Data.Group == 7), ]
+scenario_id <- get_scenario_id("./data/FinalDataPrev.csv", iscen)
+group_id <- get_group_id("./data/FinalDataPrev.csv", iscen)
 
-Scen = DataScenarios$Data.Scenario
-start_MDA = DataScenarios$Data.start_MDA
-last_MDA = DataScenarios$Data.last_MDA
-Group = DataScenarios$Data.Group
-
-prefix <- sprintf("scen%g_group%g", Scen[iscen], Group[iscen])
+prefix <- sprintf("scen%g_group%g", scenario_id, group_id)
 folder <- "output/"  # which folder to save final files to
 
-IU_scen <- which(Data$Scenario == Scen[iscen] & Data$Group == Group[iscen])
+Data = read.csv("./data/FinalDataPrev.csv")
+IU_scen <- which(Data$Scenario == scenario_id & Data$Group == group_id)
 IU_scen_name <- Data$IUCodes[IU_scen] # indicates which IUs to usescen3
 
-prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", Scen[iscen], Group[iscen]) # make sure this is consistent with main.py
-inputbeta <- sprintf("files/InputBet_scen%g_group%g.csv", Scen[iscen], Group[iscen])
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", scenario_id, group_id) # make sure this is consistent with main.py
 
 use_virtualenv("../.venv", required=TRUE)
 
@@ -68,7 +82,7 @@ set.seed(iscen)
 prev = matrix(NA, ncol = n.map.sampl, nrow = length(IU_scen))
 for (i in 1:length(IU_scen))
 {
-  set.seed(Scen[iscen])
+  set.seed(scenario_id)
   L = rnorm(n.map.sampl, Data$Logit[IU_scen[i]], sd = Data$Sds[IU_scen[i]])
   prev[i, ] = exp(L)/(1+exp(L))
 }
@@ -107,13 +121,13 @@ allseed <- seed
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
 
-inputbeta <- sprintf("files/InputBet_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen])
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it1.csv", scenario_id, group_id)
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
 ### Run Python
 
 ### read in python output file
-prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen])
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it1.csv", scenario_id, group_id)
 res <- read.csv(prevalence_output)
 ans <- 100*res[,dim(res)[2]]
 
@@ -219,10 +233,10 @@ allseed <- c(allseed, seed)
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
 
-inputbeta <- sprintf("files/InputBet_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen])
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it2.csv", scenario_id, group_id)
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
-prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen])
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it2.csv", scenario_id, group_id)
 res <- read.csv(prevalence_output) # read python output file
 ans <- 100*res[,dim(res)[2]]
 
