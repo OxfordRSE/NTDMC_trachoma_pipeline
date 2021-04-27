@@ -157,8 +157,8 @@ for(i in 1:n.pixels){
 cat( min(ess),  "", max(ess), "\n")
 
 ESS<-matrix(ess, nrow=1, ncol=n.pixels)
-write.table(ESS, file="test_data/ESS_iteration_1.csv", row.names = F, col.names = F)
-write.table(param[1:N[1],], file="test_data/param_iteration_1.csv", row.names = F, col.names = F)
+write.table(ESS, file="tests/test_data/ESS_iteration_1.csv", row.names = F, col.names = F)
+write.table(param[1:N[1],], file="tests/test_data/param_iteration_1.csv", row.names = F, col.names = F)
 
 
 ###################################################################
@@ -265,5 +265,5 @@ ESS<-rbind(ESS, as.numeric(ess))
 w1<-c(colSums(WW))
 param[1:sum(N[1:(t)]),4]<-w1
 
-write.table(ESS, file="test_data/ESS_iteration_2.csv", row.names = F, col.names = F)
-write.table(param[1:sum(N[1:(t)]),], file="test_data/param_iteration_2.csv", row.names = F, col.names = F)
+write.table(ESS, file="tests/test_data/ESS_iteration_2.csv", row.names = F, col.names = F)
+write.table(param[1:sum(N[1:(t)]),], file="tests/test_data/param_iteration_2.csv", row.names = F, col.names = F)

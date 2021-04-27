@@ -151,8 +151,11 @@ for(i in 1:n.pixels){
 cat( min(ess),  "", max(ess), "\n")
 
 ESS<-matrix(ess, nrow=1, ncol=n.pixels)
-write.table(ESS, file="test_data/ESS_iteration_1.csv", row.names = F, col.names = F)
-write.table(param[1:N[1],], file="test_data/param_iteration_1.csv", row.names = F, col.names = F)
+### Copy variables for testing
+### See tests/test_AMIS_trachoma.R
+ESS_iteration_1 <- ESS
+param_iteration_1 <- param[1:N[1],]
+
 
 
 ###################################################################
@@ -251,5 +254,7 @@ ESS<-rbind(ESS, as.numeric(ess))
 w1<-c(colSums(WW))
 param[1:sum(N[1:(t)]),4]<-w1
 
-write.table(ESS, file="test_data/ESS_iteration_2.csv", row.names = F, col.names = F)
-write.table(param[1:sum(N[1:(t)]),], file="test_data/param_iteration_2.csv", row.names = F, col.names = F)
+### Copy variables for testing
+### See tests/test_AMIS_trachoma.R
+ESS_iteration_2 <- ESS
+param_iteration_2 <- param[1:N[1],]
