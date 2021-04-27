@@ -35,9 +35,6 @@ folder <- "output/"  # which folder to save final files to
 IU_scen <- which(Data$Scenario == Scen[iscen] & Data$Group == Group[iscen])
 IU_scen_name <- Data$IUCodes[IU_scen] # indicates which IUs to usescen3
 
-prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", Scen[iscen], Group[iscen]) # make sure this is consistent with main.py
-inputbeta <- sprintf("files/InputBet_scen%g_group%g.csv", Scen[iscen], Group[iscen])
-
 use_virtualenv("../.venv", required=TRUE)
 
 source("AMIS_source.R")  # source code for AMIS
@@ -106,11 +103,14 @@ seed <- c(1:N[t])
 allseed <- seed
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
+
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen])
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
 ### Run Python
 inputMDA <- sprintf("files/InputMDA_scen%g.csv", Scen[iscen], Group[iscen])
 infect_output <- sprintf("output/InfectFilePath_scen%g_group%g.csv", Scen[iscen], Group[iscen])
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen]) # make sure this is consistent with main.py
 transmission_model$Trachoma_Simulation(inputbeta,
                                        inputMDA,
                                        prevalence_output,
@@ -221,8 +221,11 @@ seed <- c((max(seed)+1): (max(seed)+N[t]))
 allseed <- c(allseed, seed)
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
+
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen])
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen]) # make sure this is consistent with main.py
 transmission_model$Trachoma_Simulation(inputbeta,
                                        inputMDA,
                                        prevalence_output,

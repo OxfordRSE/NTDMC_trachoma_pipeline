@@ -106,20 +106,14 @@ seed <- c(1:N[t])
 allseed <- seed
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
+
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen])
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
 ### Run Python
-inputMDA <- sprintf("files/InputMDA_scen%g.csv", Scen[iscen], Group[iscen])
-infect_output <- sprintf("output/InfectFilePath_scen%g_group%g.csv", Scen[iscen], Group[iscen])
-transmission_model$Trachoma_Simulation(inputbeta,
-                                       inputMDA,
-                                       prevalence_output,
-                                       infect_output,
-                                       SaveOutput=FALSE,
-                                       OutSimFilePath=NULL,
-                                       InSimFilePath=NULL)
 
-# read in python output file
+### read in python output file
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it1.csv", Scen[iscen], Group[iscen])
 res <- read.csv(prevalence_output)
 ans <- 100*res[,dim(res)[2]]
 
@@ -221,16 +215,11 @@ seed <- c((max(seed)+1): (max(seed)+N[t]))
 allseed <- c(allseed, seed)
 input_params <- cbind(seed, x)
 colnames(input_params) = c("randomgen", "bet")
+
+inputbeta <- sprintf("files/InputBet_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen])
 write.csv(input_params, file=inputbeta, row.names=FALSE)
 
-transmission_model$Trachoma_Simulation(inputbeta,
-                                       inputMDA,
-                                       prevalence_output,
-                                       infect_output,
-                                       SaveOutput=FALSE,
-                                       OutSimFilePath=NULL,
-                                       InSimFilePath=NULL)
-
+prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g_it2.csv", Scen[iscen], Group[iscen])
 res <- read.csv(prevalence_output) # read python output file
 ans <- 100*res[,dim(res)[2]]
 
