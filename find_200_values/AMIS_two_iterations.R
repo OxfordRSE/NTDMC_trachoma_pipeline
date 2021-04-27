@@ -33,6 +33,20 @@ get_group_id <- function(data, iscen) {
     return(scenar_group_pairs$Data.Group[iscen])
 }
 
+sample_prevalence_map_at_IUs <- function(IU_indices, n.map.sampl, scenario_id) {
+    prev = matrix(NA, ncol = n.map.sampl, nrow = length(IU_indices))
+    sample_map <- function(IU_index) {
+        set.seed(scenario_id) # For comparison with test data with `set.seed(Scen[iscen])`
+        rnorm(n.map.sampl, Data$Logit[IU_index], sd = Data$Sds[IU_index])
+    }
+    L <- lapply(IU_indices, sample_map)
+    prev <- sapply(L, function(x) exp(x)/(1+exp(x)))
+
+    return(
+        t(prev*100)
+    )
+}
+
 iscen = 1
 
 library(tmvtnorm)
@@ -48,7 +62,6 @@ folder <- "output/"  # which folder to save final files to
 
 Data = read.csv("./data/FinalDataPrev.csv")
 IU_scen <- which(Data$Scenario == scenario_id & Data$Group == group_id)
-IU_scen_name <- Data$IUCodes[IU_scen] # indicates which IUs to usescen3
 
 prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", scenario_id, group_id) # make sure this is consistent with main.py
 
@@ -77,21 +90,7 @@ NN<-100  # Number of parameter sets in each iteration
 N<-rep(NN,T)  # This allows to have different number of parameters sampled each iteration. Here it's the same  # different number of iterations might break code
 #N[1] <- 50
 
-############# Geostatistical prevalences ########
-set.seed(iscen)
-prev = matrix(NA, ncol = n.map.sampl, nrow = length(IU_scen))
-for (i in 1:length(IU_scen))
-{
-  set.seed(scenario_id)
-  L = rnorm(n.map.sampl, Data$Logit[IU_scen[i]], sd = Data$Sds[IU_scen[i]])
-  prev[i, ] = exp(L)/(1+exp(L))
-}
-
-prev = prev*100
-# for(i in 1:n.pixels){
-# hist(prev[i,], main=paste0("Map prevalence of ", IU_scen_name[i]))
-# }
-
+prev <- sample_prevalence_map_at_IUs(IU_scen, n.map.sampl, scenario_id)
 mean.prev<-sapply(1:n.pixels, function(a) mean(prev[a,]))
 
 ###################################################################
