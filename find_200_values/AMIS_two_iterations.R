@@ -52,7 +52,6 @@ iscen = 1
 library(tmvtnorm)
 library(mnormt)
 library(mclust)
-library(reticulate)
 
 scenario_id <- get_scenario_id("./data/FinalDataPrev.csv", iscen)
 group_id <- get_group_id("./data/FinalDataPrev.csv", iscen)
@@ -65,10 +64,8 @@ IU_scen <- which(Data$Scenario == scenario_id & Data$Group == group_id)
 
 prevalence_output <- sprintf("output/OutputPrev_scen%g_group%g.csv", scenario_id, group_id) # make sure this is consistent with main.py
 
-use_virtualenv("../.venv", required=TRUE)
 
 source("AMIS_source.R")  # source code for AMIS
-transmission_model <- import("trachoma")
 
 # function to draw from prior
 dprop0<-function(a,b){
