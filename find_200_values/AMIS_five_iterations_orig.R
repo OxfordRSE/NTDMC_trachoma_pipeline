@@ -169,7 +169,7 @@ ESS<-matrix(ess, nrow=1, ncol=n.pixels)
 filename <- sprintf("tests/test_data/ESS_iteration_%g.csv", t)
 write.table(ESS, file=filename, row.names = F, col.names = F)
 filename <- sprintf("tests/test_data/param_iteration_%g.csv", t)
-write.table(param[1:N[1],], file=filename, row.names = F, col.names = F)
+write.table(param[1:N[1],1:3], file=filename, row.names = F, col.names = F)
 
 #pdf(file=paste0(folder, "plot.",prefix,"_",  t, ".pdf"))
 #pp<-data.frame(x=param[1:sum(N[1:(t)]),1],  prevalence=param[1:sum(N[1:(t)]),2])
@@ -293,7 +293,7 @@ while(stop==0){
   filename <- sprintf("tests/test_data/ESS_iteration_%g.csv", t)
   write.table(ESS, file=filename, row.names = F, col.names = F)
   filename <- sprintf("tests/test_data/param_iteration_%g.csv", t)
-  write.table(param[1:sum(N[1:(t)]),], file=filename, row.names = F, col.names = F)
+  write.table(param[1:sum(N[1:(t)]),1:3], file=filename, row.names = F, col.names = F)
     
   if(min(ess)>=ESS.R) stop<-1
   if(t>= T) stop<-1
