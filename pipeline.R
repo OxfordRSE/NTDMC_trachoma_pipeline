@@ -2,7 +2,7 @@ iscen <- 1
 
 ### Read data
 data <- read.csv("./data/FinalData.csv")
-grouped_data <- group_ius_according_to_mean_prevalence(data)
+grouped_data <- trachomapipeline::group_ius_according_to_mean_prevalence(data)
 
 scenario_id <- get_scenario_id(grouped_data, iscen)
 group_id <- get_group_id(grouped_data, iscen)
