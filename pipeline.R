@@ -4,8 +4,8 @@ iscen <- 1
 data <- read.csv("./data/FinalData.csv")
 grouped_data <- trachomapipeline::group_ius_according_to_mean_prevalence(data)
 
-scenario_id <- get_scenario_id(grouped_data, iscen)
-group_id <- get_group_id(grouped_data, iscen)
+scenario_id <- trachomapipeline::get_scenario_id(grouped_data, iscen)
+group_id <- trachomapipeline::get_group_id(grouped_data, iscen)
 
 IU_scen <- which(
     grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
