@@ -16,6 +16,7 @@ prevalence_map <- trachomapipeline::sample_prevalence_map_at_IUs(
     stats_for_ius, n.map.sampl = 3000, seed = iscen
 )
 
+reticulate::use_virtualenv("./.venv", required = TRUE)
 transmission_model <- reticulate::import("trachoma")
 model_func <- transmission_model$Trachoma_Simulation
 param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
