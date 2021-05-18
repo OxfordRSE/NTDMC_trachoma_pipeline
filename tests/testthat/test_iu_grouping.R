@@ -32,6 +32,6 @@ test_that("ius are assigned the correct group", {
     data <- data.frame(logits, sds, iucodes, stringsAsFactors = F)
     colnames(data) <- c("Logit", "Sds", "IUCodes")
     grouped_data <- group_ius_according_to_mean_prevalence(data, nsamples = 3000)
-    expected_dataframe <- cbind(data, group_for_ius=c(1,2,3,4,5,6,7))
+    expected_dataframe <- cbind(data, Group=c(1,2,3,4,5,6,7))
     expect_identical(grouped_data, expected_dataframe)
  })

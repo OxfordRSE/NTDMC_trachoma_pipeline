@@ -48,10 +48,10 @@ group_ius_according_to_mean_prevalence <- function(data, nsamples) {
     prev_for_ius <- apply(
         logit_and_std_matrix, 1, estimate_mean_prevalence, nsamples
     )
-    group_for_ius <- sapply(
+    Group <- sapply(
         prev_for_ius, get_group_id_from_iuprev
     )   
     return(
-              cbind(data, group_for_ius)
+              cbind(data, Group)
         )
 }
