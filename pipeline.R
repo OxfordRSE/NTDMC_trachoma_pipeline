@@ -12,7 +12,7 @@ IU_scen <- which(
 )
 
 stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
-prevalence_map <- sample_prevalence_map_at_IUs(
+prevalence_map <- trachomapipeline::sample_prevalence_map_at_IUs(b
     stats_for_ius, n.map.sampl = 3000, seed = iscen
 )
 
