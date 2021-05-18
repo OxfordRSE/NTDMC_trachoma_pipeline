@@ -43,7 +43,7 @@ estimate_mean_prevalence <- function(stats, nsamples) {
 #' @return The same dataframe as \code{data} with an added column
 #'     containing the group number for each row (IU)
 #' @export
-group_ius_according_to_mean_prevalence <- function(data, nsamples) {
+group_ius_according_to_mean_prevalence <- function(data, nsamples = 3000) {
     logit_and_std_matrix <- cbind(data$Logit, data$Sds)
     prev_for_ius <- apply(
         logit_and_std_matrix, 1, estimate_mean_prevalence, nsamples
