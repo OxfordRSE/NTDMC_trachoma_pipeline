@@ -29,32 +29,23 @@ param_and_weights <- trachomAMIS::amis(prevalence_map = prev,
                                       target_ess = 250
                                   )
 ## Resample N trajectories
-inputMDA <- sprintf("files/InputMDA_scen%g.csv", scenario_id, group_id)
-for (i in 1:length(IU_scen)) {
-    weights <- param_and_weights[,i+3]
-    param_and_weights_for_iu <- cbind(
-        param_and_weights[,1:2], weights
-    )
-    
-    init_values <- sample_init_values(param_and_weights_for_iu)
-    inputbeta <- paste("files200/InputBet_", IU_scen[i], ".csv", sep="")
-    prevalence_output <- paste("output200/OutputPrev_", IU_scen[i], ".csv'", sep="")
-    prevalence_output <- paste("OutSimFilePath='output200/OutputVals_", IUCodes[i], ".p'", sep="")
-    infect_output <- paste("InfectFilePath='output200/InfectFilePath_", IUCodes[i], ".csv'", sep="")
-    outputs_file <- paste("OutSimFilePath='output200/OutputVals_", IUCodes[i], ".p'", sep="")
-    write.csv(
-        init_values,
-        file = inputbeta,
-        row.names = F
-    )
-    model_func(
-        inputbeta,
-        inputMDA,
-        prevalence_output,
-        infect_output,
-        SaveOutput=FALSE,
-        OutSimFilePath=outputs_file,
-        InSimFilePath=NULL
-    )
-    
+start_year <- min(data$start_MDA) - 1
+mda_file <- read.csv(
+        sprintf("files/InputMDA_scen%g_group%g.csv", scenario_id, group_id)
+)
+mda_limit_years <- mda_file[,c("first_mda", "last_mda")]
+for (iucode in grouped_data$IUCodes[IU_scen]) {
+    sampled_params <- trachomapipeline::sample_init_values(
+                                            params = param_and_weights[,1],
+                                            weights = param_and_weights[,i+3],
+                                            seeds = param_and_weights[,3]
+                                        )
+    mda_filename <- sprintf("files/InputMDA_%s.csv", iucode)
+    trachomapipeline::write_mda_file(
+                          mda_limit_years,
+                          start_year,
+                          end_year = 2019,
+                          filename = mda_filename
+                          )
+    trachomapipeline::resample(model_func, sampled_params, iucode, mda_filename)
 }
