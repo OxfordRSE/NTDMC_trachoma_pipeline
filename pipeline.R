@@ -10,8 +10,10 @@ group_id <- trachomapipeline::get_group_id(grouped_data, iscen)
 IU_scen <- which(
     grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
 )
+
+stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
 prevalence_map <- sample_prevalence_map_at_IUs(
-    IU_scen, n.map.sampl = 3000, scenario_id
+    stats_for_ius, n.map.sampl = 3000, seed = iscen
 )
 
 transmission_model <- reticulate::import("trachoma")
