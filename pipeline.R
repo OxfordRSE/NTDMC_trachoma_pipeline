@@ -4,21 +4,21 @@ iscen <- 1
 data <- read.csv("./data/FinalData.csv")
 grouped_data <- trachomapipeline::group_ius_according_to_mean_prevalence(data)
 
-scenario_id <- trachomapipeline::get_scenario_id(grouped_data, iscen)
-group_id <- trachomapipeline::get_group_id(grouped_data, iscen)
+scenario_id <- trachomapipeline::get_scenario_id(iscen, grouped_data)
+group_id <- trachomapipeline::get_group_id(iscen, grouped_data)
 
 IU_scen <- which(
     grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
 )
 
 stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
-prevalence_map <- trachomapipeline::sample_prevalence_map_at_IUs(b
+prevalence_map <- trachomapipeline::sample_prevalence_map_at_IUs(
     stats_for_ius, n.map.sampl = 3000, seed = iscen
 )
 
 transmission_model <- reticulate::import("trachoma")
 model_func <- transmission_model$Trachoma_Simulation
-param_and_weights <- trachomAMIS::amis(prevalence_map = prev,
+param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
                                       transmission_model = model_func,
                                       n_params = 2, nsamples = 100,
                                       IO_file_id = sprintf("scen%g_group%g",
