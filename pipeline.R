@@ -28,18 +28,23 @@ param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
                                       delta = 5,
                                       T = T,
                                       target_ess = 250
-                                  )
+                                      )
 ## Resample N trajectories
 start_year <- min(data$start_MDA) - 1
 mda_file <- read.csv(
         sprintf("files/InputMDA_scen%g_group%g.csv", scenario_id, group_id)
 )
 mda_limit_years <- mda_file[,c("first_mda", "last_mda")]
+colnames(param_and_weights) <- c(
+    "seeds", "beta", "sim_prev",
+    grouped_data$IUCodes[IU_scen]
+    )
 for (iucode in grouped_data$IUCodes[IU_scen]) {
     sampled_params <- trachomapipeline::sample_init_values(
-                                            params = param_and_weights[,1],
-                                            weights = param_and_weights[,i+3],
-                                            seeds = param_and_weights[,3]
+                                            params = param_and_weights[["beta"]],
+                                            weights = param_and_weights[[iucode]],
+                                            seeds = param_and_weights[["seeds"]],
+                                            nsamples = 200
                                         )
     mda_filename <- sprintf("files/InputMDA_%s.csv", iucode)
     trachomapipeline::write_mda_file(
