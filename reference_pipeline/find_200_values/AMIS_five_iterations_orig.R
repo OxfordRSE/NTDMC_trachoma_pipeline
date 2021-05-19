@@ -168,8 +168,15 @@ cat( min(ess),  "", max(ess), "\n")
 ESS<-matrix(ess, nrow=1, ncol=n.pixels)
 filename <- sprintf("tests/test_data/ESS_iteration_%g.csv", t)
 write.table(ESS, file=filename, row.names = F, col.names = F)
+
 filename <- sprintf("tests/test_data/param_iteration_%g.csv", t)
-write.table(param[1:N[1],1:3], file=filename, row.names = F, col.names = F)
+allseeds <- 1:sum(N[1:(t)])
+ret <- data.frame(allseeds, param[1:sum(N[1:(t)]),c(1,3)], t(WW))
+colnames(ret) <- c(
+    "seeds", "beta", "sim_prev",
+    sapply(1:dim(WW)[1], function(idx) sprintf("iu%g", idx))
+)
+write.csv(file = filename, ret, row.names = F)
 
 #pdf(file=paste0(folder, "plot.",prefix,"_",  t, ".pdf"))
 #pp<-data.frame(x=param[1:sum(N[1:(t)]),1],  prevalence=param[1:sum(N[1:(t)]),2])
@@ -290,10 +297,14 @@ while(stop==0){
   w1<-c(colSums(WW))
   param[1:sum(N[1:(t)]),4]<-w1
 
-  filename <- sprintf("tests/test_data/ESS_iteration_%g.csv", t)
-  write.table(ESS, file=filename, row.names = F, col.names = F)
-  filename <- sprintf("tests/test_data/param_iteration_%g.csv", t)
-  write.table(param[1:sum(N[1:(t)]),1:3], file=filename, row.names = F, col.names = F)
+    filename <- sprintf("tests/test_data/param_iteration_%g.csv", t)
+    allseeds <- 1:sum(N[1:(t)])
+    ret <- data.frame(allseeds, param[1:sum(N[1:(t)]),c(1,3)], t(WW))
+    colnames(ret) <- c(
+        "seeds", "beta", "sim_prev",
+        sapply(1:dim(WW)[1], function(idx) sprintf("iu%g", idx))
+    )
+    write.csv(file = filename, ret, row.names = F)
     
   if(min(ess)>=ESS.R) stop<-1
   if(t>= T) stop<-1
