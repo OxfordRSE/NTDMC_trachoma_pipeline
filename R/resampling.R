@@ -9,8 +9,8 @@
 #' @return A 2 columns matrix containing the sampled parameters and
 #'     associated seed. First column is seeds
 sample_init_values <- function(params, weights, seeds, nsamples) {
-    sampled_idx = sample.int(
-        1:length(params),
+    sampled_idx <- sample.int(
+        length(params),
         nsamples,
         replace = F,
         prob = weights
