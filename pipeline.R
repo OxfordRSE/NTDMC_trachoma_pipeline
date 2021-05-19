@@ -1,20 +1,20 @@
 library(trachomapipeline)
 
-iscen <- 1
+jobid <- 1
 
 ### Read data
 data <- read.csv("./data/FinalData.csv")
 grouped_data <- group_ius_according_to_mean_prevalence(data)
 
-scenario_id <- get_scenario_id(iscen, grouped_data)
-group_id <- get_group_id(iscen, grouped_data)
+scenario_id <- get_scenario_id(jobid, grouped_data)
+group_id <- get_group_id(jobid, grouped_data)
 IU_scen <- which(
     grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
 )
 
 stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
 prevalence_map <- sample_prevalence_map_at_IUs(
-    stats_for_ius, n.map.sampl = 3000, seed = iscen
+    stats_for_ius, n.map.sampl = 3000, seed = jobid
 )
 
 reticulate::use_virtualenv("./.venv", required = TRUE)
