@@ -4,4 +4,5 @@ nsamples: 100
 delta: 5
 T: 5
 target_ess: 250
+nsamples_resample: 200
 resample_path: "./output"
