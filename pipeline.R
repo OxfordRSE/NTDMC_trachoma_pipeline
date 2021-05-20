@@ -51,12 +51,13 @@ for (iucode in grouped_data$IUCodes[IU_scen]) {
         seeds = param_and_weights[["seeds"]],
         nsamples = 200
     )
-    mda_filename <- sprintf("files/InputMDA_%s.csv", iucode)
     write_mda_file(
         mda_limit_years,
         start_year,
         end_year = 2019,
-        filename = mda_filename
+        iucode,
+        param[["resample_path"]]
     )
-    resample(model_func, sampled_params, iucode, mda_filename)
+    write_parameter_file(sampled_params, iucode, param[["resample_path"]])
+    resample(model_func, iucode, param[["resample_path"]])
 }

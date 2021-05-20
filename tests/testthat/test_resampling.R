@@ -13,7 +13,8 @@ test_that("mda file has right content", {
     colnames(mda_limit_years) <- c("first_mda", "last_mda")
     
     write_mda_file(
-        mda_limit_years, start_year = 2002, end_year = 2019, mda_filename = filename
+        mda_limit_years, start_year = 2007, end_year = 2019, "ETH18544", "."
         )
     mda_years <- read.csv(filename)
+    expect_equal(mda_years, expected_mda_years)
 })

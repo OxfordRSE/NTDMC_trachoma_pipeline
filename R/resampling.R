@@ -20,31 +20,35 @@ sample_init_values <- function(params, weights, seeds, nsamples) {
     return(sampled)
 }
 
-write_mda_file <- function(mda_years, start_year, end_year, mda_filename) {
+write_mda_file <- function(mda_years, start_year, end_year,
+                           iucode, resample_path) {
     years <- list(
         "start_sim_year" = start_year,
         "end_sim_year" = end_year,
         "first_mda" = mda_years$first_mda,
         "last_mda" = mda_years$last_mda
         )
-    write.csv(mda_years,
-              mda_filename,
+    write.csv(years,
+              sprintf("%s/InputMDA_%s.csv", resample_path, iucode),
               row.names = F
               )
 }
-    
-resample <- function(model_func, params_and_seeds, iucode, mda_file) {
+
+write_parameter_file <- function(params_and_seeds, iucode, resample_path) {
     write.csv(
         params_and_seeds,
-        file = paste("files200/InputBet_", iucode, ".csv", sep=""),
+        file = sprintf("%s/InputBet_%g.csv", resample_path, iucode),
         row.names = F
     )
-    prevalence_output <- paste("output200/OutputPrev_", iucode, ".csv'", sep="")
-    infect_output <- paste("output200/InfectFilePath_", iucode, ".csv'", sep="")
-    outputs_file <- paste("output200/OutputVals_", IUCodes[i], ".p'", sep="")
+}
+
+resample <- function(model_func, iucode, resample_path) {
+    prevalence_output <- sprintf("%s/OutputPrev_%g.csv", resample_path, iucode)
+    infect_output <- sprintf("%s/InfectFilePath_%g.csv", resample_path, iucode)
+    outputs_file <- sprintf("%s/OutputVals_%g.p", resample_path, iucode)
     model_func(
-        inputbeta,
-        inputMDA,
+        sprintf("%s/InputBet_%g.csv", resample_path, iucode),
+        sprintf("%s/InputMDA_%s.csv", resample_path, iucode),
         prevalence_output,
         infect_output,
         SaveOutput=TRUE,
