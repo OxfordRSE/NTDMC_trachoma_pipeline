@@ -1,3 +1,10 @@
+get_start_year <- function(mda_start_years) {
+    ius_without_mdas <- which(mda_start_years == 0)
+    return(
+        min(mda_start_years[-ius_without_mdas]) - 1
+    )
+}
+
 #' Sample parameter values
 #' 
 #' Given an ensemble of parameters and their associated weight,

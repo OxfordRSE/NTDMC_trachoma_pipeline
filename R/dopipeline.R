@@ -1,6 +1,4 @@
 dopipeline <- function(parameter_file) {
-    ##:ess-bp-start::browser@nil:##
-browser(expr=is.null(.ESSBP.[["@3@"]]));##:ess-bp-end:##
     params <- read_param_file(parameter_file)
     jobid <- 1
 
@@ -37,7 +35,7 @@ browser(expr=is.null(.ESSBP.[["@3@"]]));##:ess-bp-end:##
     ##                                        )
     param_and_weights <- read.csv("/home/tlestang/repos/trachomAMIS/tests/test_data/param_iteration_5.csv")
     ## Resample 200 trajectories from year START_YEAR
-    start_year <- min(data$start_MDA) - 1
+    start_year <- get_start_year(data[["start_MDA"]])
     mda_file <- read.csv(
         sprintf("mda_files/InputMDA_scen%g_group%g.csv", scenario_id, group_id)
     )
