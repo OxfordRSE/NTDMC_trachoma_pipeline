@@ -1,0 +1,12 @@
+^files$
+^files200$
+^output$
+^output200$
+^orig_trachoma_archive$
+^reference_pipeline$
+^\.venv$
+^*.yaml$
+^CONTRIBUTING.*$
+^.Rhistory$
+^mda_files$
+^trachoma$
