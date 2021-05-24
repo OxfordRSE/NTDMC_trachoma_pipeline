@@ -5,7 +5,6 @@ find_200_values/*.py
 find_200_values/files/
 *~
 output/
-data/
 files/
 orig_trachoma_archive/
 trachoma/
