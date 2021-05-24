@@ -32,13 +32,15 @@ write_mda_file <- function(mda_years, start_year, end_year,
     years <- list(
         "start_sim_year" = start_year,
         "end_sim_year" = end_year,
-        "first_mda" = mda_years$first_mda,
-        "last_mda" = mda_years$last_mda
-        )
+        "first_mda" = mda_years["first_mda"],
+        "last_mda" = mda_years["last_mda"]
+    )
+    mda_file_path <- file.path(resample_path, sprintf("InputMDA_%s", iucode))
     write.csv(years,
-              sprintf("%s/InputMDA_%s.csv", resample_path, iucode),
+              mda_file_path,
               row.names = F
               )
+    return(mda_file_path)
 }
 
 write_parameter_file <- function(params_and_seeds, iucode, resample_path) {

@@ -13,6 +13,7 @@ dopipeline <- function(parameter_file) {
         grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
     )
 
+    mda_limit_years <- get_mda_years(scenario_id, grouped_data)
     ## Compute prevalence map for ius in job
     stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
     prevalence_map <- sample_prevalence_map_at_IUs(
@@ -39,7 +40,6 @@ dopipeline <- function(parameter_file) {
     mda_file <- read.csv(
         sprintf("mda_files/InputMDA_scen%g_group%g.csv", scenario_id, group_id)
     )
-    mda_limit_years <- mda_file[,c("first_mda", "last_mda")]
     colnames(param_and_weights) <- c(
         "seeds", "beta", "sim_prev",
         grouped_data$IUCodes[IU_scen]

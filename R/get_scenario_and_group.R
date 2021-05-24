@@ -26,4 +26,12 @@ get_scenario_id <-function(jobid, data) {
     )
 }
 
-    
+get_mda_years <- function(scenario_id, data) {
+    idx <- match(scenario_id, data$Scenario)
+    first_mda <- data$start_MDA[idx]
+    last_mda <- data$last_MDA[idx]
+    return(
+        c("first_mda" = first_mda, "last_mda" = last_mda)
+    )
+}
+
