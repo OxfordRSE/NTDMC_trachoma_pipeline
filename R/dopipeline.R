@@ -25,16 +25,15 @@ dopipeline <- function(parameter_file) {
     transmission_model <- reticulate::import("trachoma")
     model_func <- transmission_model$Trachoma_Simulation
     IO_file_id <- sprintf("scen%g_group%g", scenario_id, group_id)
-    ## param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
-    ##                                        transmission_model = model_func,
-    ##                                        n_params = 2,
-    ##                                        nsamples = params[["nsamples"]],
-    ##                                        IO_file_id
-    ##                                        delta = params[["delta"]],
-    ##                                        T = params[["T"]],
-    ##                                        target_ess = params[["target_ess"]]
-    ##                                        )
-    param_and_weights <- read.csv("/home/tlestang/repos/trachomAMIS/tests/test_data/param_iteration_5.csv")
+    param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
+                                           transmission_model = model_func,
+                                           n_params = 2,
+                                           nsamples = params[["nsamples"]],
+                                           IO_file_id
+                                           delta = params[["delta"]],
+                                           T = params[["T"]],
+                                           target_ess = params[["target_ess"]]
+                                           )
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
     mda_file <- read.csv(
