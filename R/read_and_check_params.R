@@ -11,7 +11,7 @@ read_param_file <- function (param_file_path) {
         "resample_path"="character"
     )
     for (name in names(params)) {
-        if (!(name %in% names(expected))) {
+        if (!(name %in% names(expected_types))) {
             msg <- sprintf(
                 "Bad entry in parameter file: '%s' not recognised", name
             )
@@ -27,5 +27,6 @@ read_param_file <- function (param_file_path) {
             stop(msg)
         }
     }
+    return(params)
 }
 
