@@ -1,7 +1,6 @@
 #' @export
-dopipeline <- function(parameter_file) {
+dopipeline <- function(parameter_file, jobid) {
     params <- read_param_file(parameter_file)
-    jobid <- 1
 
     ### Read data
     data <- read.csv(params[["data_file"]])
