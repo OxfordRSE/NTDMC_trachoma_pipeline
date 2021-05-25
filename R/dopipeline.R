@@ -1,3 +1,4 @@
+#' @export
 dopipeline <- function(parameter_file) {
     params <- read_param_file(parameter_file)
     jobid <- 1
