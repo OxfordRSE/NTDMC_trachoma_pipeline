@@ -26,7 +26,7 @@ dopipeline <- function(parameter_file) {
     )
 
     ## Sample models parameters using AMIS algorithm
-    reticulate::use_virtualenv("./.venv", required = TRUE)
+    reticulate::use_python(params[["python"]], required = TRUE)
     transmission_model <- reticulate::import("trachoma")
     model_func <- transmission_model$Trachoma_Simulation
     IO_file_id <- sprintf("scen%g_group%g", scenario_id, group_id)

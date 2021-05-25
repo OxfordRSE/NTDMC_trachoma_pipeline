@@ -8,7 +8,8 @@ read_param_file <- function (param_file_path) {
         "T"="integer",
         "target_ess"="integer",
         "nsamples_resample"="integer",
-        "resample_path"="character"
+        "resample_path"="character",
+        "python"="character"
     )
     for (name in names(params)) {
         if (!(name %in% names(expected_types))) {
