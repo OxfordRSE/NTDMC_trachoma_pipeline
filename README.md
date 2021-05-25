@@ -1,25 +1,26 @@
 # Installation
 
-1. Install pipeline package
+1. Install pipeline package and AMIS package
 
 ```R
+	devtools::install_github("OxfordRSE/trachomAMIS")
 	devtools::install_github("OxfordRSE/NTDMC_trachoma_pipeline")
 ```
 2. Clone trachoma model
 
 ```shell
-git clone https://github.com/ArtRabbitStudio/ntd-model-trachoma.git
+	git clone https://github.com/ArtRabbitStudio/ntd-model-trachoma.git
 ```
 3. Create python virtual environment
 
 ```shell
-python3 -m venv .venv
-source .venv/bin/activate
+	python3 -m venv .venv
+	source .venv/bin/activate
 ```
 4. Install model 
 
 ```shell
-python3 -m pip install ntd-model-trachoma/
+	python3 -m pip install ntd-model-trachoma/
 ```
 
 # Usage
@@ -33,7 +34,7 @@ Function `dopipeline` expects the path to a YAML file describing the parameters:
 ```yaml
 data_file: "./data/FinalData.csv" # Geostatistical data
 nsamples_map: 3000 # Nb of samples for sampling prevalence map
-nsamples: 100.0 # Number of parameters samples at each AMIS iteration
+nsamples: 100 # Number of parameters samples at each AMIS iteration
 delta: 5 # delta parameter for AMIS
 T: 5 # Maximum number of AMIS iterations
 target_ess: 250 # Target Effective Sample Size
