@@ -14,7 +14,7 @@ dopipeline <- function(parameter_file) {
     )
 
     mda_limit_years <- get_mda_years(scenario_id, grouped_data)
-    start_year <- mda_limit_years$first_mda - 1
+    start_year <- mda_limit_years["first_mda"] - 1
     end_year <- 2019
     mda_file_path <- write_mda_file(
         mda_limit_years, start_year, end_year, sprintf("jobid%g", jobid), "."
