@@ -1,6 +1,6 @@
 data_file: "./data/FinalData.csv"
 nsamples_map: 3000
-nsamples: 100.0
+nsamples: 100
 delta: 5
 T: 5
 target_ess: 250

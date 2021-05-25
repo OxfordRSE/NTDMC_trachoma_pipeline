@@ -34,7 +34,7 @@ dopipeline <- function(parameter_file) {
                                            transmission_model = model_func,
                                            n_params = 2,
                                            nsamples = params[["nsamples"]],
-                                           IO_file_id
+                                           IO_file_id,
                                            delta = params[["delta"]],
                                            T = params[["T"]],
                                            target_ess = params[["target_ess"]],
