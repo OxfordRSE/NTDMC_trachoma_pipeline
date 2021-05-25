@@ -5,7 +5,7 @@
 ^orig_trachoma_archive$
 ^reference_pipeline$
 ^\.venv$
-^*.yaml$
+^.yaml$
 ^CONTRIBUTING.*$
 ^.Rhistory$
 ^mda_files$
