@@ -38,7 +38,8 @@ dopipeline <- function(parameter_file, jobid) {
                                            delta = params[["delta"]],
                                            T = params[["T"]],
                                            target_ess = params[["target_ess"]],
-                                           mda_file = mda_file_path
+                                           mda_file = mda_file_path,
+                                           jobid
                                            )
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
