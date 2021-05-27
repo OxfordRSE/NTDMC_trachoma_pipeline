@@ -61,20 +61,10 @@ N<-rep(NN,T)  # This allows to have different number of parameters sampled each 
 #N[1] <- 50
 
 ############# Geostatistical prevalences ########
-set.seed(iscen)
-prev = matrix(NA, ncol = n.map.sampl, nrow = length(IU_scen))
-for (i in 1:length(IU_scen))
-{
-  set.seed(Scen[iscen])
-  L = rnorm(n.map.sampl, Data$Logit[IU_scen[i]], sd = Data$Sds[IU_scen[i]])
-  prev[i, ] = exp(L)/(1+exp(L))
-}
-
-prev = prev*100
-# for(i in 1:n.pixels){
-# hist(prev[i,], main=paste0("Map prevalence of ", IU_scen_name[i]))
-# }
-
+prev <- matrix(
+    scan(file = "prevalence_map.csv"),
+    nrow = length(IU_scen), byrow = T
+)
 mean.prev<-sapply(1:n.pixels, function(a) mean(prev[a,]))
 
 ###################################################################
@@ -95,7 +85,7 @@ Mean<-list(NA, 10*T)
 PP<-list(NA,T)
 GG<-list(NA,T)
 
-
+set.seed(1)
 ###################################################################
 #          Iteration 1.
 ####################################################################
@@ -191,7 +181,6 @@ write.csv(file = filename, ret, row.names = F)
 #          Iteration 2+
 ####################################################################
 
-set.seed(iscen)
 stop<-0
 while(stop==0){
   
