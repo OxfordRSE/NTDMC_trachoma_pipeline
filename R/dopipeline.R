@@ -27,19 +27,17 @@ dopipeline <- function(parameter_file, jobid) {
 
     ## Sample models parameters using AMIS algorithm
     reticulate::use_python(params[["python"]], required = TRUE)
-    transmission_model <- reticulate::import("trachoma")
-    model_func <- transmission_model$Trachoma_Simulation
-    IO_file_id <- sprintf("scen%g_group%g", scenario_id, group_id)
+    trachoma_module <- reticulate::import("trachoma")
+    model_func <- trachoma_module$Trachoma_Simulation
+    wrapped_model <- get_model_wrapper(model_func, scenario_id, mda_file_path)
     param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
-                                           transmission_model = model_func,
-                                           n_params = 2,
+                                           transmission_model = wrapped_model,
                                            nsamples = params[["nsamples"]],
                                            IO_file_id,
                                            delta = params[["delta"]],
                                            T = params[["T"]],
                                            target_ess = params[["target_ess"]],
                                            mda_file = mda_file_path,
-                                           jobid
                                            )
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
