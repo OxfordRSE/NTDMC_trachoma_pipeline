@@ -1,3 +1,9 @@
+extract_amis_params <- function(params) {
+    names <- c("nsamples", "delta", "T", "target_ess")
+    return (
+        params[names]
+    )
+}
 #' @export
 dopipeline <- function(parameter_file, jobid) {
     params <- read_param_file(parameter_file)
@@ -30,14 +36,10 @@ dopipeline <- function(parameter_file, jobid) {
     trachoma_module <- reticulate::import("trachoma")
     model_func <- trachoma_module$Trachoma_Simulation
     wrapped_model <- get_model_wrapper(model_func, scenario_id, mda_file_path)
+    amis_params <- extract_amis_params(params)
     param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
                                            transmission_model = wrapped_model,
-                                           nsamples = params[["nsamples"]],
-                                           IO_file_id,
-                                           delta = params[["delta"]],
-                                           T = params[["T"]],
-                                           target_ess = params[["target_ess"]],
-                                           mda_file = mda_file_path,
+                                           amis_params
                                            )
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
