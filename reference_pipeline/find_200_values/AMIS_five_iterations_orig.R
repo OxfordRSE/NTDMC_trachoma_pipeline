@@ -14,7 +14,7 @@
 iscen = 1
 rm(list=setdiff(ls(), "iscen"))
 
-library(tmvtnorm)
+# library(tmvtnorm)
 library(mnormt)
 library(mclust)
 library(reticulate)
@@ -35,7 +35,7 @@ folder <- "output/"  # which folder to save final files to
 IU_scen <- which(Data$Scenario == Scen[iscen] & Data$Group == Group[iscen])
 IU_scen_name <- Data$IUCodes[IU_scen] # indicates which IUs to usescen3
 
-use_virtualenv("../.venv", required=TRUE)
+use_virtualenv("./.venv", required=TRUE)
 
 source("AMIS_source.R")  # source code for AMIS
 transmission_model <- import("trachoma")
