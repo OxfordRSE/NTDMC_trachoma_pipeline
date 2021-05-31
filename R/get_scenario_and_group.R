@@ -40,12 +40,4 @@ extract_IU_stats_from_data <- function(jobid, data) {
     return(stats_for_ius)
 }
 
-get_mda_years <- function(scenario_id, data) {
-    idx <- match(scenario_id, data$Scenario)
-    first_mda <- data$start_MDA[idx]
-    last_mda <- data$last_MDA[idx]
-    return(
-        c("first_mda" = first_mda, "last_mda" = last_mda)
-    )
-}
 

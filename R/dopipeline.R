@@ -12,19 +12,8 @@ dopipeline <- function(parameter_file, jobid) {
     data <- read.csv(params[["data_file"]])
     grouped_data <- group_ius_according_to_mean_prevalence(data)
 
-    ## Get ius for this specific job
-    scenario_id <- get_scenario_id(jobid, grouped_data)
-    group_id <- get_group_id(jobid, grouped_data)
-    IU_scen <- which(
-        grouped_data$Scenario == scenario_id & grouped_data$Group == group_id
-    )
+    make_mda_file(scenario_id, grouped_data, jobid)
 
-    mda_limit_years <- get_mda_years(scenario_id, grouped_data)
-    start_year <- mda_limit_years["first_mda"] - 1
-    end_year <- 2019
-    mda_file_path <- write_mda_file(
-        mda_limit_years, start_year, end_year, sprintf("jobid%g", jobid), "."
-    )
     ## Compute prevalence map for ius in job
     stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
     prevalence_map <- sample_prevalence_map_at_IUs(

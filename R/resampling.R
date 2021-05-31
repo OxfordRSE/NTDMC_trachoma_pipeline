@@ -1,10 +1,3 @@
-get_start_year <- function(mda_start_years) {
-    ius_without_mdas <- which(mda_start_years == 0)
-    return(
-        min(mda_start_years[-ius_without_mdas]) - 1
-    )
-}
-
 #' Sample parameter values
 #' 
 #' Given an ensemble of parameters and their associated weight,
@@ -25,22 +18,6 @@ sample_init_values <- function(params, weights, seeds, nsamples) {
     sampled <- cbind(seeds[sampled_idx], params[sampled_idx])
     colnames(sampled) = c("randomgen", "bet")
     return(sampled)
-}
-
-write_mda_file <- function(mda_years, start_year, end_year,
-                           iucode, resample_path) {
-    years <- list(
-        "start_sim_year" = start_year,
-        "end_sim_year" = end_year,
-        "first_mda" = mda_years["first_mda"],
-        "last_mda" = mda_years["last_mda"]
-    )
-    mda_file_path <- file.path(resample_path, sprintf("InputMDA_%s.csv", iucode))
-    write.csv(years,
-              mda_file_path,
-              row.names = F
-              )
-    return(mda_file_path)
 }
 
 write_parameter_file <- function(params_and_seeds, iucode, resample_path) {
