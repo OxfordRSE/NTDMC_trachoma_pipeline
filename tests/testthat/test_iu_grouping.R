@@ -19,7 +19,7 @@ test_that("ius are assigned the correct group", {
         0.245386215,
         0.390467676
     )
-    
+
     iucodes <- c(
         "ETH19289",
         "ETH18551",
@@ -35,3 +35,19 @@ test_that("ius are assigned the correct group", {
     expected_dataframe <- cbind(data, Group=c(1,2,3,4,5,6,7))
     expect_identical(grouped_data, expected_dataframe)
  })
+
+test_that("the correct stats are extracted for ius", {
+    Scenario <- c(36, 46, 36, 28, 36)
+    Group <- c(2, 3, 2, 3, 2)
+    IUCodes <- c("ETH18551", "ETH18568", "ETH18559", "ETH18644", "ETH18541")
+    Logit <- rnorm(5)
+    Sds <- rnorm(5)
+
+    expected_stats <- cbind(Logit[c(1,3,5)], Sds[c(1,3,5)])
+    rownames(expected_stats) <- IUCodes[c(1,3,5)]
+    data <- data.frame(IUCodes, Logit, Sds, Scenario, Group)
+
+    stats <- extract_IU_stats_from_data(jobid = 1, data = data)
+
+    expect_identical(stats, expected_stats)
+})

@@ -26,7 +26,7 @@ dopipeline <- function(parameter_file, jobid) {
         mda_limit_years, start_year, end_year, sprintf("jobid%g", jobid), "."
     )
     ## Compute prevalence map for ius in job
-    stats_for_ius <- cbind(grouped_data$Logit[IU_scen], grouped_data$Sds[IU_scen])
+    stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
     prevalence_map <- sample_prevalence_map_at_IUs(
         stats_for_ius, n.map.sampl = params[["nsamples_map"]], seed = jobid
     )
@@ -43,11 +43,9 @@ dopipeline <- function(parameter_file, jobid) {
                                            )
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
-    colnames(param_and_weights) <- c(
-        "seeds", "beta", "sim_prev",
-        grouped_data$IUCodes[IU_scen]
-    )
-    for (iucode in grouped_data$IUCodes[IU_scen]) {
+    iucodes <- rownames(stats_for_ius)
+    colnames(param_and_weights) <- c("seeds", "beta", "sim_prev", iucodes)
+    for (iucode in iucodes) {
         sampled_params <- sample_init_values(
             params = param_and_weights[["beta"]],
             weights = param_and_weights[[iucode]],

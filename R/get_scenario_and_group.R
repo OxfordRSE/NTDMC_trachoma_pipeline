@@ -26,6 +26,20 @@ get_scenario_id <-function(jobid, data) {
     )
 }
 
+extract_IU_stats_from_data <- function(jobid, data) {
+    if (!("Group" %in% colnames(data))) {
+        stop("dataframe has no column named 'Group'")
+    }
+    scenario_id <- get_scenario_id(jobid, data)
+    group_id <- get_group_id(jobid, data)
+    iu_indices <- which(
+        data$Scenario == scenario_id & data$Group == group_id
+    )
+    stats_for_ius <- cbind(data$Logit[iu_indices], data$Sds[iu_indices])
+    rownames(stats_for_ius) <- data$IUCodes[iu_indices]
+    return(stats_for_ius)
+}
+
 get_mda_years <- function(scenario_id, data) {
     idx <- match(scenario_id, data$Scenario)
     first_mda <- data$start_MDA[idx]
