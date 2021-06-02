@@ -28,6 +28,9 @@ read_param_file <- function (param_file_path) {
             stop(msg)
         }
     }
+
+    if (!dir.exists(params[["resample_path"]])) dir.create(params[["resample_path"]])
+
     return(params)
 }
 
