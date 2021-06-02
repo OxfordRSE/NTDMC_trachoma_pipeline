@@ -16,8 +16,9 @@ dopipeline <- function(parameter_file, jobid) {
 
     ## Compute prevalence map for ius in job
     stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
+    map_file <- file.path(params[["resample_path"]], sprintf("map_job%g.csv", jobid))
     prevalence_map <- sample_prevalence_map_at_IUs(
-        stats_for_ius, n.map.sampl = params[["nsamples_map"]], seed = jobid
+        stats_for_ius, n.map.sampl = params[["nsamples_map"]], file = map_file
     )
 
     ## Sample models parameters using AMIS algorithm
