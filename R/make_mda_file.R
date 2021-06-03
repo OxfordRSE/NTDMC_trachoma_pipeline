@@ -39,4 +39,5 @@ make_mda_file <- function(data, scenario_id, jobid) {
     mda_file_path <- write_mda_file(
         mda_limit_years, start_year, end_year, file_suffix, "."
     )
+    return(mda_file_path)
 }

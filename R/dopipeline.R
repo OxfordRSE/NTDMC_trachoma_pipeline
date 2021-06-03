@@ -14,7 +14,7 @@ dopipeline <- function(parameter_file, jobid) {
     grouped_data <- group_ius_according_to_mean_prevalence(data)
 
     scenario_id <- get_scenario_id(jobid, grouped_data)
-    make_mda_file(grouped_data, scenario_id, jobid)
+    mda_file_path <- make_mda_file(grouped_data, scenario_id, jobid)
 
     ## Compute prevalence map for ius in job
     stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
