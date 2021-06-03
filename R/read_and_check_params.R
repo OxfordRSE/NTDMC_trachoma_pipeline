@@ -1,4 +1,4 @@
-read_param_file <- function (param_file_path) {
+read_param_file <- function (param_file_path, ess_not_reached_dir) {
     params <- yaml::read_yaml(param_file_path)
     expected_types <- list(
         "data_file"="character",
@@ -29,9 +29,20 @@ read_param_file <- function (param_file_path) {
         }
     }
 
-    if (!dir.exists(params[["resample_path"]])) dir.create(params[["resample_path"]])
+    ensure_output_directory_structure(params[["resample_path"]], ess_not_reached_dir)
     if (!("python" %in% names(params))) params[["python"]] <- Sys.which("python3")
 
     return(params)
 }
 
+ensure_output_directory_structure <- function(output_dir, ess_not_reached_dir) {
+    ensure_dir <- function(dir) if (!dir.exists(dir)) dir.create(dir)
+    ensure_dir(output_dir)
+    ensure_dir(file.path(output_dir, ess_not_reached_dir))
+    dirs <- c("transmission_model_output", "mda_files", "prevalence_maps",
+              "sampled_parameters")
+    for (dir in dirs) {
+        ensure_dir(file.path(output_dir, dir))
+        ensure_dir(file.path(output_dir, ess_not_reached_dir, dir))
+    }
+}
