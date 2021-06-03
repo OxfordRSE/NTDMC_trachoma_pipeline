@@ -31,6 +31,7 @@ dopipeline <- function(parameter_file, jobid) {
                                            transmission_model = wrapped_model,
                                            amis_params
                                            )
+    save_parameters_and_weights(param_and_weights, params[["resample_path"]], jobid)
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
     iucodes <- rownames(stats_for_ius)
@@ -52,4 +53,10 @@ dopipeline <- function(parameter_file, jobid) {
         write_parameter_file(sampled_params, iucode, params[["resample_path"]])
         resample(model_func, iucode, params[["resample_path"]])
     }
+}
+
+save_parameters_and_weights <- function(param_and_weights, resample_path, jobid) {
+    filename <- sprintf("params_and_weights_%g.csv", jobid)
+    full_path <- file.path(resample_path, "sampled_parameters", filename)
+    write.csv(param_and_weights, file = full_path, row.names = F)
 }
