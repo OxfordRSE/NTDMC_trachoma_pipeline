@@ -40,14 +40,17 @@ dopipeline <- function(parameter_file, jobid) {
         warning = function(e) ess_not_reached <<- TRUE
     )
 
+    iucodes <- rownames(stats_for_ius)
     if(ess_not_reached) {
+        cat(iucodes,
+            file = file.path(params[["resample_path"]], "ESS_NOT_REACHED.txt"),
+            sep = "\n", append = TRUE)
         params[["resample_path"]] <- file.path(params[["resample_path"]], ess_not_reached_dir)
     }
 
     save_parameters_and_weights(param_and_weights, params[["resample_path"]], jobid)
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
-    iucodes <- rownames(stats_for_ius)
     colnames(param_and_weights) <- c("seeds", "beta", "sim_prev", iucodes)
     for (iucode in iucodes) {
         sampled_params <- sample_init_values(
