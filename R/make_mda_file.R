@@ -22,7 +22,7 @@ write_mda_file <- function(mda_years, start_year, end_year,
         "first_mda" = mda_years["first_mda"],
         "last_mda" = mda_years["last_mda"]
     )
-    mda_file_path <- file.path(resample_path, sprintf("InputMDA_%s.csv", iucode))
+    mda_file_path <- file.path(resample_path, "mda_files", sprintf("InputMDA_%s.csv", iucode))
     write.csv(years,
               mda_file_path,
               row.names = F

@@ -21,24 +21,27 @@ sample_init_values <- function(params, weights, seeds, nsamples) {
 }
 
 write_parameter_file <- function(params_and_seeds, iucode, resample_path) {
+    make_file_path <- function(prefix, dir) {
+        file.path(resample_path, dir, sprintf("%s_%g.csv", prefix, iucode))
+    }
     write.csv(
         params_and_seeds,
-        file = sprintf("%s/InputBet_%g.csv", resample_path, iucode),
+        make_file_path("InputBet", "model_input"),
         row.names = F
     )
 }
 
 resample <- function(model_func, iucode, resample_path) {
-    prevalence_output <- sprintf("%s/OutputPrev_%g.csv", resample_path, iucode)
-    infect_output <- sprintf("%s/InfectFilePath_%g.csv", resample_path, iucode)
-    outputs_file <- sprintf("%s/OutputVals_%g.p", resample_path, iucode)
+    make_file_path <- function(prefix, dir) {
+        file.path(resample_path, dir, sprintf("%s_%g.csv", prefix, iucode))
+    }
     model_func(
-        sprintf("%s/InputBet_%g.csv", resample_path, iucode),
-        sprintf("%s/InputMDA_%s.csv", resample_path, iucode),
-        prevalence_output,
-        infect_output,
+        make_file_path("InputBet", "model_input"),
+        make_file_path("InputMDA", "mda_files"),
+        make_file_path("OutputPrev", "model_output"),
+        make_file_path("InfectFilePath", "model_output"),
         SaveOutput=TRUE,
-        OutSimFilePath=outputs_file,
+        OutSimFilePath = make_file_path("OutputVals", "model_output"),
         InSimFilePath=NULL
     )
 }
