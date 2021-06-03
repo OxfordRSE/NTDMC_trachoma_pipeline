@@ -29,7 +29,7 @@ dopipeline <- function(parameter_file, jobid) {
     reticulate::use_python(params[["python"]], required = TRUE)
     trachoma_module <- reticulate::import("trachoma")
     model_func <- trachoma_module$Trachoma_Simulation
-    wrapped_model <- get_model_wrapper(model_func, scenario_id, mda_file_path)
+    wrapped_model <- get_model_wrapper(model_func, jobid, mda_file_path)
     amis_params <- extract_amis_params(params)
     ess_not_reached <- FALSE
     param_and_weights <- withCallingHandlers(

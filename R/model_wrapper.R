@@ -15,9 +15,9 @@ write_model_input <- function(seeds, beta, input_file) {
 }
 
 #' @export
-get_model_wrapper <- function(model_func, scenario_id, mda_file){
+get_model_wrapper <- function(model_func, jobid, mda_file){
 
-  tmp_dir <- sprintf("model_io_job%g", scenario_id)
+  tmp_dir <- sprintf("model_io_job%g", jobid)
   make_file_path <- function(prefix) {
     file.path(tmp_dir, sprintf("%s.csv", prefix))
   }
