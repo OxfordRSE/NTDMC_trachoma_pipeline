@@ -29,10 +29,19 @@ dopipeline <- function(parameter_file, jobid) {
     model_func <- trachoma_module$Trachoma_Simulation
     wrapped_model <- get_model_wrapper(model_func, scenario_id, mda_file_path)
     amis_params <- extract_amis_params(params)
-    param_and_weights <- trachomAMIS::amis(prevalence_map = prevalence_map,
-                                           transmission_model = wrapped_model,
-                                           amis_params
-                                           )
+    ess_not_reached <- FALSE
+    param_and_weights <- withCallingHandlers(
+        trachomAMIS::amis(prevalence_map = prevalence_map,
+                          transmission_model = wrapped_model,
+                          amis_params
+                          ),
+        warning = function(e) ess_not_reached <<- TRUE
+    )
+
+    if(ess_not_reached) {
+        params[["resample_path"]] <- file.path(params[["resample_path"]], ess_not_reached_dir)
+    }
+
     save_parameters_and_weights(param_and_weights, params[["resample_path"]], jobid)
     ## Resample 200 trajectories from year START_YEAR
     start_year <- get_start_year(data[["start_MDA"]])
