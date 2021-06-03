@@ -30,14 +30,13 @@ write_mda_file <- function(mda_years, start_year, end_year,
     return(mda_file_path)
 }
 
-make_mda_file <- function(data, jobid) {
-    scenario_id <- get_scenario_id(jobid, data)
+make_mda_file <- function(data, scenario_id, jobid) {
     mda_limit_years <- get_mda_years(scenario_id, data)
     start_year <- mda_limit_years["first_mda"] - 1
     end_year <- 2019
     dir <- "mda_files"; file_suffix <- sprintf("jobid%g", jobid)
     if (!(dir.exists(dir))) dir.create(dir)
     mda_file_path <- write_mda_file(
-        mda_limit_years, start_year, end_year, file_suffix, dir
+        mda_limit_years, start_year, end_year, file_suffix, "."
     )
 }

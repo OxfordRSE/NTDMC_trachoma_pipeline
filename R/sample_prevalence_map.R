@@ -15,7 +15,6 @@ sample_prevalence_map_at_IUs <- function(stats_for_ius, n.map.sampl, file = NULL
     if (is.null(file)) file <- "prevalence_map.csv"
 
     sample_map <- function(IU_index) {
-        set.seed(seed) # For testing
         rnorm(n.map.sampl, mean = stats_for_ius[IU_index,1], sd = stats_for_ius[IU_index,2])
     }
     L <- lapply(1:dim(stats_for_ius)[1], sample_map)

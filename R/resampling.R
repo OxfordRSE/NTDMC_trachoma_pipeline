@@ -22,7 +22,7 @@ sample_init_values <- function(params, weights, seeds, nsamples) {
 
 write_parameter_file <- function(params_and_seeds, iucode, resample_path) {
     make_file_path <- function(prefix, dir) {
-        file.path(resample_path, dir, sprintf("%s_%g.csv", prefix, iucode))
+        file.path(resample_path, dir, sprintf("%s_%s.csv", prefix, iucode))
     }
     write.csv(
         params_and_seeds,
@@ -33,15 +33,16 @@ write_parameter_file <- function(params_and_seeds, iucode, resample_path) {
 
 resample <- function(model_func, iucode, resample_path) {
     make_file_path <- function(prefix, dir) {
-        file.path(resample_path, dir, sprintf("%s_%g.csv", prefix, iucode))
+        file.path(resample_path, dir, sprintf("%s_%s.csv", prefix, iucode))
     }
+    pickle_path <- file.path(resample_path, "model_output", sprintf("OutputVals_%s.p", iucode))
     model_func(
         make_file_path("InputBet", "model_input"),
         make_file_path("InputMDA", "mda_files"),
         make_file_path("OutputPrev", "model_output"),
         make_file_path("InfectFilePath", "model_output"),
         SaveOutput=TRUE,
-        OutSimFilePath = make_file_path("OutputVals", "model_output"),
+        OutSimFilePath = pickle_path,
         InSimFilePath=NULL
     )
 }

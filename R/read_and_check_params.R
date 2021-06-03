@@ -39,7 +39,7 @@ ensure_output_directory_structure <- function(output_dir, ess_not_reached_dir) {
     ensure_dir <- function(dir) if (!dir.exists(dir)) dir.create(dir)
     ensure_dir(output_dir)
     ensure_dir(file.path(output_dir, ess_not_reached_dir))
-    dirs <- c("transmission_model_output", "mda_files", "prevalence_maps",
+    dirs <- c("model_output", "model_input", "mda_files", "prevalence_maps",
               "sampled_parameters")
     for (dir in dirs) {
         ensure_dir(file.path(output_dir, dir))

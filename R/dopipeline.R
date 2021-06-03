@@ -6,13 +6,15 @@ extract_amis_params <- function(params) {
 }
 #' @export
 dopipeline <- function(parameter_file, jobid) {
-    params <- read_param_file(parameter_file)
+    ess_not_reached_dir <- "ess_not_reached"
+    params <- read_param_file(parameter_file, ess_not_reached_dir)
 
     ### Read data
     data <- read.csv(params[["data_file"]])
     grouped_data <- group_ius_according_to_mean_prevalence(data)
 
-    make_mda_file(grouped_data, jobid)
+    scenario_id <- get_scenario_id(jobid, grouped_data)
+    make_mda_file(grouped_data, scenario_id, jobid)
 
     ## Compute prevalence map for ius in job
     stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
@@ -44,7 +46,7 @@ dopipeline <- function(parameter_file, jobid) {
             nsamples = params[["nsamples_resample"]]
         )
         write_mda_file(
-            mda_limit_years,
+            get_mda_years(scenario_id, data),
             start_year,
             end_year = 2019,
             iucode,
