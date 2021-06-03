@@ -30,6 +30,7 @@ read_param_file <- function (param_file_path) {
     }
 
     if (!dir.exists(params[["resample_path"]])) dir.create(params[["resample_path"]])
+    if (!("python" %in% names(params))) params[["python"]] <- Sys.which("python3")
 
     return(params)
 }
