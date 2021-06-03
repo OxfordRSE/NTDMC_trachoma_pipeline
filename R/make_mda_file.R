@@ -30,7 +30,8 @@ write_mda_file <- function(mda_years, start_year, end_year,
     return(mda_file_path)
 }
 
-make_mda_file <- function(scenario_id, data, jobid) {
+make_mda_file <- function(data, jobid) {
+    scenario_id <- get_scenario_id(jobid, data)
     mda_limit_years <- get_mda_years(scenario_id, data)
     start_year <- mda_limit_years["first_mda"] - 1
     end_year <- 2019
