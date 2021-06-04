@@ -1,0 +1,9 @@
+data_file: "./data/FinalData.csv" # Geostatistical data
+nsamples_map: 3000 # Nb of samples for sampling prevalence map
+nsamples: 100 # Number of parameters samples at each AMIS iteration
+delta: 5 # delta parameter for AMIS
+T: 2 # Maximum number of AMIS iterations
+target_ess: 250 # Target Effective Sample Size
+nsamples_resample: 200 # Number of parameter values to resample
+resample_path: "./output" # Output path
+
