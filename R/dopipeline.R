@@ -41,6 +41,7 @@ dopipeline <- function(parameter_file, jobid) {
     )
 
     iucodes <- rownames(stats_for_ius)
+    colnames(param_and_weights) <- c("seeds", "beta", "sim_prev", iucodes)
     if(ess_not_reached) {
         cat(iucodes,
             file = file.path(params[["resample_path"]], "ESS_NOT_REACHED.txt"),
@@ -50,7 +51,6 @@ dopipeline <- function(parameter_file, jobid) {
 
     save_parameters_and_weights(param_and_weights, params[["resample_path"]], jobid)
     ## Resample 200 trajectories from year START_YEAR
-    colnames(param_and_weights) <- c("seeds", "beta", "sim_prev", iucodes)
     for (iucode in iucodes) {
         sampled_params <- sample_init_values(
             params = param_and_weights[["beta"]],
