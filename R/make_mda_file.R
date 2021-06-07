@@ -14,30 +14,22 @@ get_mda_years <- function(scenario_id, data) {
     )
 }
 
-write_mda_file <- function(mda_years, start_year, end_year,
-                           iucode, resample_path) {
+write_mda_file <- function(mda_years, start_year, end_year, mda_file_path) {
     years <- list(
         "start_sim_year" = start_year,
         "end_sim_year" = end_year,
         "first_mda" = mda_years["first_mda"],
         "last_mda" = mda_years["last_mda"]
     )
-    mda_file_path <- file.path(resample_path, "mda_files", sprintf("InputMDA_%s.csv", iucode))
-    write.csv(years,
-              mda_file_path,
-              row.names = F
-              )
-    return(mda_file_path)
+    write.csv(years, mda_file_path, row.names = F)
 }
 
-make_mda_file <- function(data, scenario_id, jobid) {
+make_mda_file <- function(data, scenario_id, dir, suffix) {
     mda_limit_years <- get_mda_years(scenario_id, data)
-    start_year <- mda_limit_years["first_mda"] - 1
+    start_year <- get_start_year(data[["start_MDA"]])
     end_year <- 2019
-    dir <- "mda_files"; file_suffix <- sprintf("jobid%g", jobid)
     if (!(dir.exists(dir))) dir.create(dir)
-    mda_file_path <- write_mda_file(
-        mda_limit_years, start_year, end_year, file_suffix, "."
-    )
+    mda_file_path <- file.path(dir, sprintf("InputMDA_%s.csv", suffix))
+    write_mda_file(mda_limit_years, start_year, end_year, mda_file_path)
     return(mda_file_path)
 }

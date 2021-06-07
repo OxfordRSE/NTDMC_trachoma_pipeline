@@ -14,7 +14,7 @@ dopipeline <- function(parameter_file, jobid) {
     grouped_data <- group_ius_according_to_mean_prevalence(data)
 
     scenario_id <- get_scenario_id(jobid, grouped_data)
-    mda_file_path <- make_mda_file(grouped_data, scenario_id, jobid)
+    mda_file_path <- make_mda_file(grouped_data, scenario_id, "mda_files", jobid)
 
     ## Compute prevalence map for ius in job
     stats_for_ius <- extract_IU_stats_from_data(jobid, grouped_data)
@@ -50,7 +50,6 @@ dopipeline <- function(parameter_file, jobid) {
 
     save_parameters_and_weights(param_and_weights, params[["resample_path"]], jobid)
     ## Resample 200 trajectories from year START_YEAR
-    start_year <- get_start_year(data[["start_MDA"]])
     colnames(param_and_weights) <- c("seeds", "beta", "sim_prev", iucodes)
     for (iucode in iucodes) {
         sampled_params <- sample_init_values(
@@ -59,13 +58,8 @@ dopipeline <- function(parameter_file, jobid) {
             seeds = param_and_weights[["seeds"]],
             nsamples = params[["nsamples_resample"]]
         )
-        write_mda_file(
-            get_mda_years(scenario_id, data),
-            start_year,
-            end_year = 2019,
-            iucode,
-            params[["resample_path"]]
-        )
+        mda_dir <- file.path(params[["resample_path"]], "mda_files")
+        make_mda_file(grouped_data, scenario_id, mda_dir, iucode)
         write_parameter_file(sampled_params, iucode, params[["resample_path"]])
         resample(model_func, iucode, params[["resample_path"]])
     }
